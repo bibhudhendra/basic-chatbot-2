@@ -10,16 +10,22 @@ function Chatbot() {
     const sendMessage = async () => {
         if (message.trim() !== '') { // Check if message is not just empty spaces
             try {
-                const response = await post('apiName', '/messages', {
-                    body: { message },
-                    headers: { /* any required headers */ }
+                const response = await fetch('https://6o72cebd6i.execute-api.us-east-1.amazonaws.com/stage-1', {
+                    method: 'POST', // or 'POST'
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Additional headers here
+                    }
                 });
-                // Assume response.data contains the message content you want to display
-                // Adjust this line if the response structure is different
-                setMessages([...messages, { content: message }]);
-                setMessage('');
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log(data); // Handle your data here
             } catch (error) {
-                console.error('Error sending message:', error);
+                console.error("Failed to fetch data:", error);
             }
         }
     };
