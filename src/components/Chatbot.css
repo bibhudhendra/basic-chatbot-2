@@ -1,0 +1,56 @@
+/* src/components/Chatbot.css */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 90vh; /* Full viewport height */
+    width: 100vw; /* Full viewport width */
+    margin: 0;
+    padding: 0; /* No padding around the edges */
+    background-color: #f9f9f9;
+    box-sizing: border-box; /* Padding and border included in width/height */
+}
+
+.messages-list {
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+    overflow-y: auto;
+    flex-grow: 1; /* Expand to use available space */
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+.messages-list li {
+    padding: 8px 12px;
+    border-radius: 4px;
+    background-color: #e6f7ff;
+    border: 1px solid #b3d7ff;
+    margin-bottom: 8px;
+}
+
+.input-row {
+    display: flex;
+    margin: 10px 10px 10px 10px; /* Slight margin for visual spacing */
+}
+
+.message-input {
+    flex-grow: 1; /* Takes majority of row space */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.send-button {
+    width: 10%; /* Static width */
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.send-button:hover {
+    background-color: #45a049;
+}
