@@ -23,10 +23,6 @@ function Chatbot() {
                     body: JSON.stringify(payload)
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
                 const responseData = await response.json();
                 console.log(responseData);
                 const serverMessage = {
