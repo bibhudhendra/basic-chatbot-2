@@ -66,10 +66,13 @@ function Chatbot() {
 
     function parseServiceResponse(data) {
         // Remove the first and last character (assuming they're always unwanted quotes)
-        const cleanedData = data.slice(1, -1);
-        const stringsToRemove = ["'stringValue'", "'longValue'", "'thirdValue'"];
-        const specialCharsToRemove = ["{", "}", ":"];
-        return removeStringsAndSpecialChars(cleanedData, stringsToRemove, specialCharsToRemove);
+        if (data[0] === '[') {
+            const cleanedData = data.slice(1, -1);
+            const stringsToRemove = ["'stringValue'", "'longValue'", "'thirdValue'"];
+            const specialCharsToRemove = ["{", "}", ":"];
+            return removeStringsAndSpecialChars(cleanedData, stringsToRemove, specialCharsToRemove);
+        }
+        return data;
     }
 
     return (
