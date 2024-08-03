@@ -1,7 +1,6 @@
 // src/components/Chatbot.js
-import React, { useState } from 'react';
-import { post } from '@aws-amplify/api';
-import './Chatbot.css'; // Import the CSS file
+import React, { useEffect, useState } from 'react';
+import './Chatbot.css'; // Make sure this path is correct
 
 function Chatbot() {
     const [message, setMessage] = useState('');
@@ -9,24 +8,42 @@ function Chatbot() {
 
     const sendMessage = async () => {
         if (message.trim() !== '') { // Check if message is not just empty spaces
+            const newMessage = {
+                type: 'user',
+                content: message
+            };
+
+            // Display user message immediately in the chat window
+            setMessages(messages => [...messages, newMessage]);
+
             try {
+                const payload = { query: message };
                 const response = await fetch('https://6o72cebd6i.execute-api.us-east-1.amazonaws.com/stage-1', {
-                    method: 'POST', // or 'POST'
-                    headers: {
-                        'Content-Type': 'application/json',
-                        // Additional headers here
-                    }
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
                 });
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                const data = await response.json();
-                console.log(data); // Handle your data here
+                const responseData = await response.json();
+                console.log(responseData)
+                const serverMessage = {
+                    type: 'server',
+                    content: responseData.body || "No response from server." // Adjust the key according to your response structure
+                };
+
+                // Update messages with the response from the server
+                setMessages(messages => [...messages, serverMessage]);
             } catch (error) {
                 console.error("Failed to fetch data:", error);
+                setMessages(messages => [...messages, { type: 'error', content: 'Failed to send message.' }]);
             }
+
+            // Clear the input after sending
+            setMessage('');
         }
     };
 
@@ -34,7 +51,9 @@ function Chatbot() {
         <div className="chat-container">
             <ul className="messages-list">
                 {messages.map((msg, index) => (
-                    <li key={index}>{msg.content}</li>
+                    <li key={index} className={msg.type === 'user' ? 'user-message' : 'server-message'}>
+                        {msg.content}
+                    </li>
                 ))}
             </ul>
             <div className="input-row">

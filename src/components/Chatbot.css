@@ -54,3 +54,19 @@
 .send-button:hover {
     background-color: #45a049;
 }
+
+/* Chatbot.css */
+.user-message {
+    text-align: right;
+    color: blue;
+}
+
+.server-message {
+    text-align: left;
+    color: green;
+}
+
+.error-message {
+    text-align: left;
+    color: red;
+}
