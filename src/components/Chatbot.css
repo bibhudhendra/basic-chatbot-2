@@ -103,3 +103,19 @@
     order: -1; /* Puts the icon before the text for server messages */
 }
 
+.details-summary {
+    font-size: 0.85em;  /* Adjust size as needed */
+    color: #555;        /* Subtle color for less emphasis */
+}
+
+details summary {
+    cursor: pointer;
+}
+
+details p {
+    font-size: 0.8em;   /* Smaller text size for the details content */
+    color: #666;        /* Slightly lighter text color */
+    margin-top: 5px;    /* Space between summary and detail text */
+}
+
+

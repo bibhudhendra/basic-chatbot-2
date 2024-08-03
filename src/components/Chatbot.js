@@ -78,8 +78,8 @@ function Chatbot() {
                 {messages.map((msg, index) => (
                     <li key={index} className={msg.type === 'user' ? 'user-message' : 'server-message'}>
                         {msg.type !== 'user'? (<span>{msg.content}
-                            <details>
-                                <summary>Details</summary>
+                            <details className="details-summary">
+                                <summary>Query Details</summary>
                                 <p>{msg.sql}</p>
                             </details>
                         </span>
