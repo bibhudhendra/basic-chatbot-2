@@ -1,8 +1,8 @@
 // src/components/Chatbot.js
-import React, { useState } from 'react';
 import './Chatbot.css'; // Ensure your CSS path is correct
 import userIcon from '../assets/user-icon.png'; // Adjust the path as needed
-import serverIcon from '../assets/server-icon.png'; // Adjust the path as needed
+import serverIcon from '../assets/server-icon.png';
+import {useState} from "react"; // Adjust the path as needed
 
 function Chatbot() {
     const [message, setMessage] = useState('');

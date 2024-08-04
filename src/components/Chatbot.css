@@ -1,121 +1,147 @@
-/* src/components/Chatbot.css */
+/* Global settings for chat container */
+.App-header {
+    display: flex;
+    align-items: center; /* Aligns items vertically */
+    justify-content: center; /* Center align horizontally */
+    gap: 20px; /* Adds space between the logo and the title */
+    padding: 20px; /* Optional: Adds padding around the header */
+    background-color: #ffffff; /* Matches the app background for consistency */
+}
+
+.App-header img {
+    width: 100px; /* Adjust width as needed */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.App-header h1 {
+    margin: 0; /* Removes default margin to align title better with the image */
+    color: #333; /* Dark color for the title text */
+}
+
 .chat-container {
     display: flex;
     flex-direction: column;
-    height: 90vh; /* Full viewport height */
-    width: 100vw; /* Full viewport width */
+    height: 80vh;
+    width: 100vw;
     margin: 0;
-    padding: 0; /* No padding around the edges */
-    background-color: #f9f9f9;
-    box-sizing: border-box; /* Padding and border included in width/height */
+    padding: 0;
+    /*background-color: #f4f7f9;*/
+    box-sizing: border-box;
 }
 
+/* Styling for the message list and its items */
 .messages-list {
     list-style: none;
     padding: 10px;
     margin: 0;
     overflow-y: auto;
-    flex-grow: 1; /* Expand to use available space */
+    flex-grow: 1;
     background-color: #fff;
     border: 1px solid #ccc;
 }
 
+.messages-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.messages-list::-webkit-scrollbar-thumb {
+    background-color: #ccffcc;
+    border-radius: 10px;
+}
+
+.messages-list::-webkit-scrollbar-track {
+    background-color: #ffffff;
+}
+
 .messages-list li {
     padding: 8px 12px;
-    border-radius: 4px;
-    background-color: #e6f7ff;
-    border: 1px solid #b3d7ff;
-    margin-bottom: 8px;
-}
-
-.input-row {
-    display: flex;
-    margin: 10px 10px 10px 10px; /* Slight margin for visual spacing */
-}
-
-.message-input {
-    flex-grow: 1; /* Takes majority of row space */
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.send-button {
-    width: 10%; /* Static width */
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.send-button:hover {
-    background-color: #45a049;
-}
-
-/* Chatbot.css */
-/*.user-message {*/
-/*    text-align: right;*/
-/*    color: blue;*/
-/*}*/
-
-/*.server-message {*/
-/*    text-align: left;*/
-/*    color: green;*/
-/*}*/
-
-.error-message {
-    text-align: left;
-    color: red;
-}
-
-/* Chatbot.css */
-.messages-list li {
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    border-radius: 20px;
+    border: 1px solid #000000	;
+    background-color: #ECFFDC	;
+    /*background-image: linear-gradient(to right, #E8E8E8, #E8E8E8);*/
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease-out;
+    transform: scale(1.01);
 }
 
+/* Specific styles for user and server messages */
 .user-message {
     justify-content: flex-end;
+    background-color: #000000;
     text-align: right;
 }
 
 .server-message {
     justify-content: flex-start;
+    background-color: #ffffff	;
     text-align: left;
 }
 
+/* Error message styling */
+.error-message {
+    text-align: left;
+    color: red;
+}
+
+/* Input row and elements within it */
+.input-row {
+    display: flex;
+    margin: 10px;
+}
+
+.message-input, .send-button {
+    border-radius: 15px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.message-input {
+    flex-grow: 1;
+    border: 1px solid #ccc;
+}
+
+.send-button {
+    width: 10%;
+    background-color: #FFC300;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.send-button:hover {
+    background-color: #363636;
+}
+
+/* Styling for message icons */
 .message-icon {
-    width: 20px;
-    height: 20px;
-    margin-left: 5px;
-    margin-right: 5px;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 50%;
 }
 
 .right {
-    order: 2; /* Puts the icon after the text for user messages */
+    order: 2;  /* Icon after the text for user messages */
 }
 
 .left {
-    order: -1; /* Puts the icon before the text for server messages */
+    order: -1;  /* Icon before the text for server messages */
 }
 
+/* Details summary customization */
 .details-summary {
-    font-size: 0.85em;  /* Adjust size as needed */
-    color: #555;        /* Subtle color for less emphasis */
-}
-
-details summary {
+    font-size: 0.85em;
+    color: #555;
     cursor: pointer;
 }
 
 details p {
-    font-size: 0.8em;   /* Smaller text size for the details content */
-    color: #666;        /* Slightly lighter text color */
-    margin-top: 5px;    /* Space between summary and detail text */
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 5px;
 }
-
-
