@@ -8,40 +8,6 @@ function Chatbot() {
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
 
-    // const sendMessage = async () => {
-    //     if (message.trim() !== '') {
-    //         const newMessage = { type: 'user', content: message };
-    //
-    //         setMessages(messages => [...messages, newMessage]);
-    //         setMessage('');
-    //
-    //         try {
-    //             const payload = { query: message };
-    //             const response = await fetch('https://6o72cebd6i.execute-api.us-east-1.amazonaws.com/stage-1', {
-    //                 method: 'POST',
-    //                 headers: { 'Content-Type': 'application/json' },
-    //                 body: JSON.stringify(payload)
-    //             });
-    //
-    //             const responseData = await response.json();
-    //             console.log(responseData);
-    //             const serverMessage = {
-    //                 type: 'server',
-    //                 content: parseServiceResponse(responseData.body) || "No response from server.",
-    //                 sql: responseData.sql
-    //             };
-    //             console.log(serverMessage);
-    //
-    //             setMessages(messages => [...messages, serverMessage]);
-    //         } catch (error) {
-    //             console.error("Failed to fetch data:", error);
-    //             setMessages(messages => [...messages, { type: 'error', content: 'Failed to send message.' }]);
-    //         }
-    //
-    //         setMessage('');
-    //     }
-    // };
-
     const sendMessage = async () => {
         if (message.trim() !== '') {
             const newMessage = { type: 'user', content: message };
@@ -117,25 +83,6 @@ function Chatbot() {
 
     return (
         <div className="chat-container">
-            {/*<ul className="messages-list">*/}
-            {/*    {messages.map((msg, index) => (*/}
-            {/*        <li key={index} className={msg.type === 'user' ? 'user-message' : 'server-message'}>*/}
-            {/*            {msg.type !== 'user'? (*/}
-            {/*                <span>*/}
-            {/*                    {msg.content}*/}
-            {/*                    <details className="details-summary">*/}
-            {/*                        <summary>Query Details</summary>*/}
-            {/*                        <p>{msg.sql}</p>*/}
-            {/*                    </details>*/}
-            {/*                </span>*/}
-            {/*                ):*/}
-            {/*                (<span>{msg.content}</span>)}*/}
-
-            {/*            {msg.type === 'user' ? <img src={userIcon} alt="User" className="message-icon right" /> :*/}
-            {/*                <img src={serverIcon} alt="Assistant" className="message-icon left" />}*/}
-            {/*        </li>*/}
-            {/*    ))}*/}
-            {/*</ul>*/}
             <ul className="messages-list">
                 {messages.map((msg, index) => (
                     <li key={index} className={msg.type === 'user' ? 'user-message' : 'server-message'}>
