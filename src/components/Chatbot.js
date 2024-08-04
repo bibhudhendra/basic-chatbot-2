@@ -8,12 +8,54 @@ function Chatbot() {
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
 
+    // const sendMessage = async () => {
+    //     if (message.trim() !== '') {
+    //         const newMessage = { type: 'user', content: message };
+    //
+    //         setMessages(messages => [...messages, newMessage]);
+    //         setMessage('');
+    //
+    //         try {
+    //             const payload = { query: message };
+    //             const response = await fetch('https://6o72cebd6i.execute-api.us-east-1.amazonaws.com/stage-1', {
+    //                 method: 'POST',
+    //                 headers: { 'Content-Type': 'application/json' },
+    //                 body: JSON.stringify(payload)
+    //             });
+    //
+    //             const responseData = await response.json();
+    //             console.log(responseData);
+    //             const serverMessage = {
+    //                 type: 'server',
+    //                 content: parseServiceResponse(responseData.body) || "No response from server.",
+    //                 sql: responseData.sql
+    //             };
+    //             console.log(serverMessage);
+    //
+    //             setMessages(messages => [...messages, serverMessage]);
+    //         } catch (error) {
+    //             console.error("Failed to fetch data:", error);
+    //             setMessages(messages => [...messages, { type: 'error', content: 'Failed to send message.' }]);
+    //         }
+    //
+    //         setMessage('');
+    //     }
+    // };
+
     const sendMessage = async () => {
         if (message.trim() !== '') {
             const newMessage = { type: 'user', content: message };
-
             setMessages(messages => [...messages, newMessage]);
             setMessage('');
+
+            // Add a loading spinner message
+            const loadingMessage = {
+                type: 'server',
+                content: <div className="spinner"></div>, // This will display a spinner
+                loading: true,
+                showIcon: true // Indicates that the server icon should be shown
+            };
+            setMessages(messages => [...messages, loadingMessage]);
 
             try {
                 const payload = { query: message };
@@ -24,21 +66,19 @@ function Chatbot() {
                 });
 
                 const responseData = await response.json();
-                console.log(responseData);
                 const serverMessage = {
                     type: 'server',
                     content: parseServiceResponse(responseData.body) || "No response from server.",
-                    sql: responseData.sql
+                    sql: responseData.sql,
+                    loading: false
                 };
-                console.log(serverMessage);
 
-                setMessages(messages => [...messages, serverMessage]);
+                // Replace the loading message with the actual server response
+                setMessages(messages => messages.map(msg => msg.loading ? serverMessage : msg));
             } catch (error) {
                 console.error("Failed to fetch data:", error);
-                setMessages(messages => [...messages, { type: 'error', content: 'Failed to send message.' }]);
+                setMessages(messages => messages.map(msg => msg.loading ? { type: 'error', content: 'Failed to send message.' } : msg));
             }
-
-            setMessage('');
         }
     };
 
@@ -77,20 +117,47 @@ function Chatbot() {
 
     return (
         <div className="chat-container">
+            {/*<ul className="messages-list">*/}
+            {/*    {messages.map((msg, index) => (*/}
+            {/*        <li key={index} className={msg.type === 'user' ? 'user-message' : 'server-message'}>*/}
+            {/*            {msg.type !== 'user'? (*/}
+            {/*                <span>*/}
+            {/*                    {msg.content}*/}
+            {/*                    <details className="details-summary">*/}
+            {/*                        <summary>Query Details</summary>*/}
+            {/*                        <p>{msg.sql}</p>*/}
+            {/*                    </details>*/}
+            {/*                </span>*/}
+            {/*                ):*/}
+            {/*                (<span>{msg.content}</span>)}*/}
+
+            {/*            {msg.type === 'user' ? <img src={userIcon} alt="User" className="message-icon right" /> :*/}
+            {/*                <img src={serverIcon} alt="Assistant" className="message-icon left" />}*/}
+            {/*        </li>*/}
+            {/*    ))}*/}
+            {/*</ul>*/}
             <ul className="messages-list">
                 {messages.map((msg, index) => (
                     <li key={index} className={msg.type === 'user' ? 'user-message' : 'server-message'}>
-                        {msg.type !== 'user'? (<span>{msg.content}
-                            <details className="details-summary">
+                        {msg.type !== 'user' ? (
+                            <div className="server-info"> {/* Ensure consistent use of the flex container */}
+                                <img src={serverIcon} alt="Assistant" className="message-icon left" />
+                                {msg.loading ? (
+                                    <div className="spinner"></div> // Only show spinner when loading
+                                ) : (
+                                    <span>
+                            {msg.content}
+                                        <details className="details-summary">
                                 <summary>Query Details</summary>
                                 <p>{msg.sql}</p>
                             </details>
                         </span>
-                            ):
-                            (<span>{msg.content}</span>)}
-
-                        {msg.type === 'user' ? <img src={userIcon} alt="User" className="message-icon right" /> :
-                            <img src={serverIcon} alt="Assistant" className="message-icon left" />}
+                                )}
+                            </div>
+                        ) : (
+                            <span>{msg.content}</span>
+                        )}
+                        {msg.type === 'user' ? <img src={userIcon} alt="User" className="message-icon right" /> : null}
                     </li>
                 ))}
             </ul>

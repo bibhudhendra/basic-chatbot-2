@@ -35,6 +35,7 @@
     padding: 10px;
     margin: 0;
     overflow-y: auto;
+    max-height: 80vh;
     flex-grow: 1;
     background-color: #fff;
     border: 1px solid #ccc;
@@ -144,4 +145,31 @@ details p {
     font-size: 0.8em;
     color: #666;
     margin-top: 5px;
+}
+
+.spinner {
+    border: 4px solid rgba(0,0,0,0.1); /* Light part of spinner */
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border-left-color: #09f; /* Colored part of spinner */
+    animation: spin 1s ease infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.server-info {
+    display: flex;
+    align-items: center;  /* Vertically center the items */
+    justify-content: flex-start;  /* Align items to the start of the container */
+}
+
+.message-icon.left, .message-icon.right {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;  /* Adjust spacing as needed */
 }
