@@ -2,7 +2,8 @@
 import './Chatbot.css'; // Ensure your CSS path is correct
 import userIcon from '../assets/user-icon.png'; // Adjust the path as needed
 import serverIcon from '../assets/server-icon.png';
-import {useState} from "react"; // Adjust the path as needed
+import {useState} from "react";
+import ListTable from "./ListTable"; // Adjust the path as needed
 
 function Chatbot() {
     const [message, setMessage] = useState('');
@@ -70,13 +71,38 @@ function Chatbot() {
         return result;
     }
 
+    function extractLists(inputString) {
+        // Regular expression to match lists within square brackets
+        const listRegex = /\[(.*?)\]/g;
+
+        // Find all matches
+        const matches = [...inputString.matchAll(listRegex)];
+
+        // Process each match
+        return matches.map(match => {
+            // Split the content of each list by comma, trim whitespace, and remove quotes
+            return match[1].split(',').map(item =>
+                item.trim().replace(/^['"]|['"]$/g, '')
+            );
+        });
+    }
+
     function parseServiceResponse(data) {
         // Remove the first and last character (assuming they're always unwanted quotes)
         if (data[0] === '[') {
             const cleanedData = data.slice(1, -1);
-            const stringsToRemove = ["'stringValue'", "'longValue'", "'thirdValue'"];
+            const stringsToRemove = ["'stringValue'", "'longValue'", "'doubleValue'", "'isNull'"];
             const specialCharsToRemove = ["{", "}", ":"];
-            return removeStringsAndSpecialChars(cleanedData, stringsToRemove, specialCharsToRemove);
+            const processedData = removeStringsAndSpecialChars(cleanedData, stringsToRemove, specialCharsToRemove);
+            const extractedList = extractLists(processedData);
+            console.log("Printing the serviceResponse");
+            console.log(messages.at(0));
+            return (
+                <div>
+                    <ListTable data={extractedList}/>
+                </div>
+            );
+
         }
         return data;
     }
