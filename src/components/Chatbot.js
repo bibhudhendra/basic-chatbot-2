@@ -26,7 +26,7 @@ function Chatbot() {
 
             try {
                 const payload = { query: message };
-                const response = await fetch('https://6o72cebd6i.execute-api.us-east-1.amazonaws.com/stage-1', {
+                const response = await fetch('https://wd0omr8d3i.execute-api.us-east-1.amazonaws.com/prod', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
