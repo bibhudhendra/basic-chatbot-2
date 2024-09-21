@@ -1,6 +1,7 @@
 // src/components/ListTable.js
 import React from 'react';
-import './ListTable.css'; // Optional: Create and import CSS for additional styling
+import PropTypes from 'prop-types';
+import './ListTable.css'; // Ensure this path is correct
 
 const ListTable = ({ data }) => {
     if (!data || data.length === 0) {
@@ -21,9 +22,9 @@ const ListTable = ({ data }) => {
             </thead>
             <tbody>
                 {data.map((row, rowIndex) => (
-                    <tr key={rowIndex}>
+                    <tr key={row.id || rowIndex}>
                         {headers.map((header, cellIndex) => (
-                            <td key={cellIndex}>
+                            <td key={`${row.id || rowIndex}-${cellIndex}`}>
                                 {typeof row[header] === 'boolean' ? (row[header] ? 'Yes' : 'No') : row[header]}
                             </td>
                         ))}
@@ -32,6 +33,10 @@ const ListTable = ({ data }) => {
             </tbody>
         </table>
     );
+};
+
+ListTable.propTypes = {
+    data: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default ListTable;

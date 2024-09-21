@@ -216,3 +216,26 @@ tr:nth-child(even) {
 tr:hover {
     background-color: #f1f1f1;
 }
+
+/* src/components/Chatbot.css */
+
+/* Existing styles... */
+
+/* New styles for the download button */
+.download-button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.download-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+/* Adjustments for the table and other elements as needed */

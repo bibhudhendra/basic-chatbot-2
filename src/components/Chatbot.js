@@ -2,12 +2,40 @@
 import './Chatbot.css'; // Ensure your CSS path is correct
 import userIcon from '../assets/user-icon.png'; // Adjust the path as needed
 import serverIcon from '../assets/server-icon.png';
-import {useState} from "react";
+import { useState } from "react";
 import ListTable from "./ListTable"; // Adjust the path as needed
+import Papa from 'papaparse'; // Import Papa Parse
 
 function Chatbot() {
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
+
+    // Function to download CSV, accepts data as a parameter
+    const downloadCSV = (data) => {
+        if (!data || data.length === 0) {
+            alert("No data available to download.");
+            return;
+        }
+
+        // Use Papa Parse to convert JSON to CSV
+        const csv = Papa.unparse(data);
+
+        // Create a Blob from the CSV string
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+        // Create a link to download the Blob
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", "data.csv");
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Optional: Notify the user of successful download
+        alert("CSV file has been downloaded successfully.");
+    };
 
     const sendMessage = async () => {
         if (message.trim() !== '') {
@@ -15,7 +43,7 @@ function Chatbot() {
             const newMessage = { type: 'user', content: message };
             setMessages(messages => [...messages, newMessage]);
             setMessage('');
-    
+
             // Add a loading spinner message
             const loadingMessage = {
                 type: 'server',
@@ -24,47 +52,64 @@ function Chatbot() {
                 showIcon: true // Indicates that the server icon should be shown
             };
             setMessages(messages => [...messages, loadingMessage]);
-    
+
             try {
-                // Prepare payload and make the API request
                 const payload = { query: message };
                 const response = await fetch('https://wd0omr8d3i.execute-api.us-east-1.amazonaws.com/prod', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-    
-                // Check if response is OK
+
                 if (!response.ok) {
                     throw new Error(`Server responded with status ${response.status}`);
                 }
-    
-                // Parse the JSON response
+
                 const responseData = await response.json();
-    
-                // Initialize content variable
+
                 let content;
-    
-                // Check if the response status is 'success' and data is an array
+                let downloadNeeded = false;
+                let displayedData = [];
+                let currentFullData = [];
+
                 if (responseData.status === 'success' && Array.isArray(responseData.data)) {
-                    // Assign the ListTable component with the data
-                    content = <ListTable data={responseData.data} />;
-                } else if (responseData.status === 'success' && typeof responseData.data === 'object') {
-                    // If data is a single object, wrap it in an array
-                    content = <ListTable data={[responseData.data]} />;
+                    currentFullData = responseData.data; // Store full data for this message
+                    console.log(`Full data length: ${currentFullData.length}`); // Log for debugging
+
+                    if (currentFullData.length > 20) {
+                        displayedData = currentFullData.slice(0, 20); // First 20 elements
+                        downloadNeeded = true;
+                        console.log(`Displayed data length: ${displayedData.length}`); // Log for debugging
+                    } else {
+                        displayedData = currentFullData; // All data
+                        console.log(`Displayed data length: ${displayedData.length}`); // Log for debugging
+                    }
+
+                    content = <ListTable data={displayedData} />;
                 } else {
-                    // Fallback message if data is not as expected
                     content = "No valid data received from server.";
                 }
-    
-                // Create the server message object
+
                 const serverMessage = {
                     type: 'server',
-                    content: content, // React element or string
+                    content: (
+                        <div>
+                            {content}
+                            {downloadNeeded && (
+                                <button
+                                    className="download-button"
+                                    onClick={() => downloadCSV(currentFullData)}
+                                    aria-label="Download full data as CSV"
+                                >
+                                    Download Full Data
+                                </button>
+                            )}
+                        </div>
+                    ),
                     sql: responseData.sql,
                     loading: false
                 };
-    
+
                 // Replace the loading message with the actual server response
                 setMessages(messages => messages.map(msg => msg.loading ? serverMessage : msg));
             } catch (error) {
@@ -76,65 +121,6 @@ function Chatbot() {
             }
         }
     };
-    
-
-    function removeStringsAndSpecialChars(originalString, stringsToRemove, specialCharsToRemove) {
-        // Escape special characters in the strings to remove
-        const escapedStrings = stringsToRemove.map(str =>
-            str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-        );
-
-        // Create a regular expression for strings to remove
-        const stringsRegex = new RegExp(escapedStrings.join('|'), 'g');
-
-        // Create a regular expression for special characters to remove
-        const specialCharsRegex = new RegExp(`[${specialCharsToRemove.join('')}]`, 'g');
-
-        // First, remove the specified strings
-        let result = originalString.replace(stringsRegex, '');
-        // result = result.replace(/\],/g, ']\n');
-
-        // Then, remove the special characters
-        result = result.replace(specialCharsRegex, '');
-        console.log(result);
-        return result;
-    }
-
-    function extractLists(inputString) {
-        // Regular expression to match lists within square brackets
-        const listRegex = /\[(.*?)\]/g;
-
-        // Find all matches
-        const matches = [...inputString.matchAll(listRegex)];
-
-        // Process each match
-        return matches.map(match => {
-            // Split the content of each list by comma, trim whitespace, and remove quotes
-            return match[1].split(',').map(item =>
-                item.trim().replace(/^['"]|['"]$/g, '')
-            );
-        });
-    }
-
-    // function parseServiceResponse(data) {
-    //     // Remove the first and last character (assuming they're always unwanted quotes)
-    //     if (data[0] === '[') {
-    //         const cleanedData = data.slice(1, -1);
-    //         const stringsToRemove = ["'stringValue'", "'longValue'", "'doubleValue'", "'isNull'"];
-    //         const specialCharsToRemove = ["{", "}", ":"];
-    //         const processedData = removeStringsAndSpecialChars(cleanedData, stringsToRemove, specialCharsToRemove);
-    //         const extractedList = extractLists(processedData);
-    //         console.log("Printing the serviceResponse");
-    //         console.log(messages.at(0));
-    //         return (
-    //             <div>
-    //                 <ListTable data={extractedList}/>
-    //             </div>
-    //         );
-
-    //     }
-    //     return data;
-    // }
 
     return (
         <div className="chat-container">
@@ -165,7 +151,6 @@ function Chatbot() {
                     </li>
                 ))}
             </ul>
-
             <div className="input-row">
                 <input
                     type="text"
