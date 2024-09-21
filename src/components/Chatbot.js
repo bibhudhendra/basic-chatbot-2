@@ -35,7 +35,7 @@ function Chatbot() {
                 const responseData = await response.json();
                 const serverMessage = {
                     type: 'server',
-                    content: parseServiceResponse(responseData.body) || "No response from server.",
+                    content: responseData.data || "No response from server.",
                     sql: responseData.sql,
                     loading: false
                 };
@@ -87,25 +87,25 @@ function Chatbot() {
         });
     }
 
-    function parseServiceResponse(data) {
-        // Remove the first and last character (assuming they're always unwanted quotes)
-        if (data[0] === '[') {
-            const cleanedData = data.slice(1, -1);
-            const stringsToRemove = ["'stringValue'", "'longValue'", "'doubleValue'", "'isNull'"];
-            const specialCharsToRemove = ["{", "}", ":"];
-            const processedData = removeStringsAndSpecialChars(cleanedData, stringsToRemove, specialCharsToRemove);
-            const extractedList = extractLists(processedData);
-            console.log("Printing the serviceResponse");
-            console.log(messages.at(0));
-            return (
-                <div>
-                    <ListTable data={extractedList}/>
-                </div>
-            );
+    // function parseServiceResponse(data) {
+    //     // Remove the first and last character (assuming they're always unwanted quotes)
+    //     if (data[0] === '[') {
+    //         const cleanedData = data.slice(1, -1);
+    //         const stringsToRemove = ["'stringValue'", "'longValue'", "'doubleValue'", "'isNull'"];
+    //         const specialCharsToRemove = ["{", "}", ":"];
+    //         const processedData = removeStringsAndSpecialChars(cleanedData, stringsToRemove, specialCharsToRemove);
+    //         const extractedList = extractLists(processedData);
+    //         console.log("Printing the serviceResponse");
+    //         console.log(messages.at(0));
+    //         return (
+    //             <div>
+    //                 <ListTable data={extractedList}/>
+    //             </div>
+    //         );
 
-        }
-        return data;
-    }
+    //     }
+    //     return data;
+    // }
 
     return (
         <div className="chat-container">
