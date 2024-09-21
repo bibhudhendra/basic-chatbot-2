@@ -11,43 +11,72 @@ function Chatbot() {
 
     const sendMessage = async () => {
         if (message.trim() !== '') {
+            // Add user message to the messages state
             const newMessage = { type: 'user', content: message };
             setMessages(messages => [...messages, newMessage]);
             setMessage('');
-
+    
             // Add a loading spinner message
             const loadingMessage = {
                 type: 'server',
-                content: <div className="spinner"></div>, // This will display a spinner
+                content: <div className="spinner"></div>, // Spinner component
                 loading: true,
                 showIcon: true // Indicates that the server icon should be shown
             };
             setMessages(messages => [...messages, loadingMessage]);
-
+    
             try {
+                // Prepare payload and make the API request
                 const payload = { query: message };
                 const response = await fetch('https://wd0omr8d3i.execute-api.us-east-1.amazonaws.com/prod', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-
+    
+                // Check if response is OK
+                if (!response.ok) {
+                    throw new Error(`Server responded with status ${response.status}`);
+                }
+    
+                // Parse the JSON response
                 const responseData = await response.json();
+    
+                // Initialize content variable
+                let content;
+    
+                // Check if the response status is 'success' and data is an array
+                if (responseData.status === 'success' && Array.isArray(responseData.data)) {
+                    // Assign the ListTable component with the data
+                    content = <ListTable data={responseData.data} />;
+                } else if (responseData.status === 'success' && typeof responseData.data === 'object') {
+                    // If data is a single object, wrap it in an array
+                    content = <ListTable data={[responseData.data]} />;
+                } else {
+                    // Fallback message if data is not as expected
+                    content = "No valid data received from server.";
+                }
+    
+                // Create the server message object
                 const serverMessage = {
                     type: 'server',
-                    content: responseData.data || "No response from server.",
+                    content: content, // React element or string
                     sql: responseData.sql,
                     loading: false
                 };
-
+    
                 // Replace the loading message with the actual server response
                 setMessages(messages => messages.map(msg => msg.loading ? serverMessage : msg));
             } catch (error) {
                 console.error("Failed to fetch data:", error);
-                setMessages(messages => messages.map(msg => msg.loading ? { type: 'error', content: 'Failed to send message.' } : msg));
+                // Replace the loading message with an error message
+                setMessages(messages => messages.map(msg => 
+                    msg.loading ? { type: 'error', content: 'Failed to send message. Please try again.' } : msg
+                ));
             }
         }
     };
+    
 
     function removeStringsAndSpecialChars(originalString, stringsToRemove, specialCharsToRemove) {
         // Escape special characters in the strings to remove
@@ -113,27 +142,30 @@ function Chatbot() {
                 {messages.map((msg, index) => (
                     <li key={index} className={msg.type === 'user' ? 'user-message' : 'server-message'}>
                         {msg.type !== 'user' ? (
-                            <div className="server-info"> {/* Ensure consistent use of the flex container */}
+                            <div className="server-info">
                                 <img src={serverIcon} alt="Assistant" className="message-icon left" />
                                 {msg.loading ? (
-                                    <div className="spinner"></div> // Only show spinner when loading
+                                    <div className="spinner"></div> // Show spinner when loading
                                 ) : (
                                     <span>
-                            {msg.content}
-                                        <details className="details-summary">
-                                <summary>Query Details</summary>
-                                <p>{msg.sql}</p>
-                            </details>
-                        </span>
+                                        {msg.content}
+                                        {msg.sql && (
+                                            <details className="details-summary">
+                                                <summary>Query Details</summary>
+                                                <pre>{msg.sql}</pre> {/* Display SQL query */}
+                                            </details>
+                                        )}
+                                    </span>
                                 )}
                             </div>
                         ) : (
-                            <span>{msg.content}</span>
+                            <span>{msg.content}</span> // User message content
                         )}
-                        {msg.type === 'user' ? <img src={userIcon} alt="User" className="message-icon right" /> : null}
+                        {msg.type === 'user' && <img src={userIcon} alt="User" className="message-icon right" />}
                     </li>
                 ))}
             </ul>
+
             <div className="input-row">
                 <input
                     type="text"
