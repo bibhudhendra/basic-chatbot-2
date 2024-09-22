@@ -32,9 +32,6 @@ function Chatbot() {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-
-        // Optional: Notify the user of successful download
-        alert("CSV file has been downloaded successfully.");
     };
 
     const sendMessage = async () => {
