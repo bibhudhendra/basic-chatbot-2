@@ -4,7 +4,7 @@ import userIcon from '../assets/user-icon.png'; // Adjust the path as needed
 import serverIcon from '../assets/server-icon.png';
 import { useState } from "react";
 import ListTable from "./ListTable"; // Adjust the path as needed
-import Papa from 'papaparse'; // Import Papa Parse
+import Papa from 'papaparse'; // Ensure Papa Parse is installed via npm/yarn
 
 function Chatbot() {
     const [message, setMessage] = useState('');
@@ -48,7 +48,7 @@ function Chatbot() {
             const loadingMessage = {
                 type: 'server',
                 content: <div className="spinner"></div>, // Spinner component
-                loading: true,
+                loading: true, // Indicates that this message is a loading indicator
                 showIcon: true // Indicates that the server icon should be shown
             };
             setMessages(messages => [...messages, loadingMessage]);
@@ -72,24 +72,37 @@ function Chatbot() {
                 let displayedData = [];
                 let currentFullData = [];
 
-                if (responseData.status === 'success' && Array.isArray(responseData.data)) {
-                    currentFullData = responseData.data; // Store full data for this message
-                    console.log(`Full data length: ${currentFullData.length}`); // Log for debugging
+                if (responseData.status === 'success') {
+                    if (responseData.sql) {
+                        // SQL is present; handle SQL response
+                        if (Array.isArray(responseData.data)) {
+                            currentFullData = responseData.data; // Store full data for this message
 
-                    if (currentFullData.length > 20) {
-                        displayedData = currentFullData.slice(0, 20); // First 20 elements
-                        downloadNeeded = true;
-                        console.log(`Displayed data length: ${displayedData.length}`); // Log for debugging
+                            if (currentFullData.length > 20) {
+                                displayedData = currentFullData.slice(0, 20); // First 20 elements
+                                downloadNeeded = true;
+                            } else {
+                                displayedData = currentFullData; // All data
+                            }
+
+                            content = <ListTable data={displayedData} />;
+                        } else {
+                            // Data is not an array; handle accordingly
+                            content = <p>No valid data received from server.</p>;
+                        }
+                    } else if (responseData.data && responseData.data.ai_response) {
+                        // SQL is absent; display AI response
+                        content = <p>{responseData.data.ai_response}</p>;
                     } else {
-                        displayedData = currentFullData; // All data
-                        console.log(`Displayed data length: ${displayedData.length}`); // Log for debugging
+                        // Neither SQL nor AI response is present
+                        content = <p>No valid data received from server.</p>;
                     }
-
-                    content = <ListTable data={displayedData} />;
                 } else {
-                    content = "No valid data received from server.";
+                    // Handle server-side errors
+                    content = <p>{responseData.error || 'An error occurred.'}</p>;
                 }
 
+                // Construct the server message based on the presence of SQL
                 const serverMessage = {
                     type: 'server',
                     content: (
@@ -107,7 +120,7 @@ function Chatbot() {
                         </div>
                     ),
                     sql: responseData.sql,
-                    loading: false
+                    loading: false // Indicates that loading is complete
                 };
 
                 // Replace the loading message with the actual server response
