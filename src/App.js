@@ -9,7 +9,7 @@ Amplify.configure(awsExports);
 function App() {
     const handleContactClick = () => {
         // Open a new tab with the desired URL
-        window.open('https://tiny.amazon.com/h7frxknm/issuamazissucrea', '_blank');
+        window.open('https://sim.amazon.com/issues/create?assignedFolder=62c95db4-b402-4ff6-856b-af34d57c36a9', '_blank');
     };
     return (
         <div className="App">
@@ -19,7 +19,7 @@ function App() {
                     <img src={logo} alt="Analytics Buddy Logo" />
                 </div>
                 <button onClick={handleContactClick} className="contact-button">
-                    Contact to DW
+                    Contact to SCS Team
                 </button>
             </header>
             <Chatbot />
