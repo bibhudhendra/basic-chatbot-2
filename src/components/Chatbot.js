@@ -2,7 +2,7 @@
 import './Chatbot.css'; // Ensure your CSS path is correct
 import userIcon from '../assets/user-icon.png'; // Adjust the path as needed
 import serverIcon from '../assets/server-icon.png';
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Import useEffect
 import ListTable from "./ListTable"; // Adjust the path as needed
 import Papa from 'papaparse'; // Ensure Papa Parse is installed via npm/yarn
 
@@ -131,6 +131,23 @@ function Chatbot() {
             }
         }
     };
+
+    // useEffect to add the initial server message when component mounts
+    useEffect(() => {
+        const initialMessage = {
+            type: 'server',
+            content: (
+                <div>
+                    <h4>Welcome to SCS DW Chatbot! I'm here to assist you with your queries.</h4>
+                    <h4>I have below capabilities</h4> 
+                    <p>1. Want to get SCS DW data? Just ask !! </p>
+                    <p>2. Want to get SQL? Type /generateSql followed by your query</p>
+                </div>
+            ),
+            loading: false // No loading indicator for static message
+        };
+        setMessages([initialMessage]);
+    }, []); // Empty dependency array ensures this runs once on mount
 
     return (
         <div className="chat-container">
