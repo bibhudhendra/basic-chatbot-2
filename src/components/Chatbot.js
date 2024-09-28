@@ -97,6 +97,7 @@ function Chatbot() {
                 let downloadNeeded = false;
                 let displayedData = [];
                 let currentFullData = [];
+                let sqlQuery = '';
 
                 if (responseData.status === 'success') {
                     if (Array.isArray(responseData.data)) {
@@ -114,6 +115,11 @@ function Chatbot() {
                         const markdownTable = generateMarkdownTable(displayedData);
 
                         content = `**Here is your data:**\n\n${markdownTable}`;
+
+                        // Extract SQL query if present
+                        if (responseData.sql) {
+                            sqlQuery = responseData.sql;
+                        }
                     } else if (responseData.data && responseData.data.ai_response) {
                         // Handle AI response
                         let aiResponse = responseData.data.ai_response;
@@ -138,6 +144,7 @@ function Chatbot() {
                     type: 'server',
                     content: content,
                     fullData: currentFullData, // Store full data for download if needed
+                    sql: sqlQuery, // Store SQL query if present
                     loading: false // Indicates that loading is complete
                 };
 
@@ -224,6 +231,21 @@ I'm here to assist you with your queries. I have the following capabilities:
                                             >
                                                 Download Full Data
                                             </button>
+                                        )}
+                                        {/* Show Query Details if SQL is present */}
+                                        {msg.sql && (
+                                            <details className="details-summary">
+                                                <summary>Query Details</summary>
+                                                <ReactMarkdown
+                                                    remarkPlugins={[remarkGfm]}
+                                                    rehypePlugins={[rehypeSanitize]}
+                                                    components={renderers}
+                                                >
+                                                    {` \`\`\`sql
+${msg.sql}
+\`\`\` `}
+                                                </ReactMarkdown>
+                                            </details>
                                         )}
                                     </span>
                                 )}

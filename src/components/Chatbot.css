@@ -3,7 +3,6 @@
 /* 1. CSS Variables for Consistent Theming */
 :root {
     --primary-color: #3498db; /* Blue */
-    --secondary-color: #2ecc71; /* Green */
     --background-color: #f9f9f9; /* Light Gray */
     --message-background-user: #dcf8c6; /* Light Green for User Messages */
     --message-background-server: #ffffff; /* White for Server Messages */
@@ -13,7 +12,7 @@
     --input-background: #ffffff; /* Input Background */
     --button-background: #3498db; /* Blue Buttons */
     --button-hover-background: #2980b9; /* Darker Blue on Hover */
-    --download-button-background: #2ecc71; /* Green Download Button */
+    --download-button-background: #3498db; /* Green Download Button */
     --download-button-hover: #27ae60; /* Darker Green on Hover */
     --spinner-border: #3498db; /* Spinner Color */
     --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
