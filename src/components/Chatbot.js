@@ -1,9 +1,14 @@
 // src/components/Chatbot.js
+
 import './Chatbot.css'; // Ensure your CSS path is correct
 import userIcon from '../assets/user-icon.png'; // Adjust the path as needed
 import serverIcon from '../assets/server-icon.png';
 import { useState, useEffect } from "react"; // Import useEffect
-import ListTable from "./ListTable"; // Adjust the path as needed
+import ReactMarkdown from 'react-markdown'; // Import ReactMarkdown
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'; // Import SyntaxHighlighter
+import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism'; // Import a theme
+import remarkGfm from 'remark-gfm'; // For GitHub Flavored Markdown
+import rehypeSanitize from 'rehype-sanitize'; // For sanitizing HTML
 import Papa from 'papaparse'; // Ensure Papa Parse is installed via npm/yarn
 
 function Chatbot() {
@@ -32,6 +37,30 @@ function Chatbot() {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    };
+
+    // Utility function to convert data array to Markdown table
+    const generateMarkdownTable = (dataArray) => {
+        if (!Array.isArray(dataArray) || dataArray.length === 0) {
+            return "No data available to display.";
+        }
+
+        // Extract table headers from keys of the first object
+        const headers = Object.keys(dataArray[0]);
+
+        // Create the header row
+        const headerRow = `| ${headers.join(' | ')} |`;
+
+        // Create the separator row
+        const separatorRow = `| ${headers.map(() => '---').join(' | ')} |`;
+
+        // Create the data rows
+        const dataRows = dataArray.map(row => {
+            return `| ${headers.map(header => String(row[header] || '')).join(' | ')} |`;
+        });
+
+        // Combine all parts into a single Markdown table string
+        return `${headerRow}\n${separatorRow}\n${dataRows.join('\n')}`;
     };
 
     const sendMessage = async () => {
@@ -64,59 +93,51 @@ function Chatbot() {
 
                 const responseData = await response.json();
 
-                let content;
+                let content = '';
                 let downloadNeeded = false;
                 let displayedData = [];
                 let currentFullData = [];
 
                 if (responseData.status === 'success') {
-                    if (responseData.sql) {
-                        // SQL is present; handle SQL response
-                        if (Array.isArray(responseData.data)) {
-                            currentFullData = responseData.data; // Store full data for this message
+                    if (Array.isArray(responseData.data)) {
+                        // Handle data array response
+                        currentFullData = responseData.data; // Store full data for this message
 
-                            if (currentFullData.length > 20) {
-                                displayedData = currentFullData.slice(0, 20); // First 20 elements
-                                downloadNeeded = true;
-                            } else {
-                                displayedData = currentFullData; // All data
-                            }
-
-                            content = <ListTable data={displayedData} />;
+                        if (currentFullData.length > 20) {
+                            displayedData = currentFullData.slice(0, 20); // First 20 elements
+                            downloadNeeded = true;
                         } else {
-                            // Data is not an array; handle accordingly
-                            content = <p>No valid data received from server.</p>;
+                            displayedData = currentFullData; // All data
                         }
+
+                        // Convert the data array to a Markdown table
+                        const markdownTable = generateMarkdownTable(displayedData);
+
+                        content = `**Here is your data:**\n\n${markdownTable}`;
                     } else if (responseData.data && responseData.data.ai_response) {
-                        // SQL is absent; display AI response
-                        content = <p>{responseData.data.ai_response}</p>;
+                        // Handle AI response
+                        let aiResponse = responseData.data.ai_response;
+
+                        // Check and remove outer ```markdown block if present
+                        if (aiResponse.startsWith('```markdown') && aiResponse.endsWith('```')) {
+                            aiResponse = aiResponse.replace(/^```markdown\s*/, '').replace(/```$/, '');
+                        }
+
+                        content = aiResponse; // Assuming this is a markdown string
                     } else {
-                        // Neither SQL nor AI response is present
-                        content = <p>No valid data received from server.</p>;
+                        // Neither data array nor AI response is present
+                        content = "No valid data received from server.";
                     }
                 } else {
                     // Handle server-side errors
-                    content = <p>{responseData.error || 'An error occurred.'}</p>;
+                    content = responseData.error || 'An error occurred.';
                 }
 
-                // Construct the server message based on the presence of SQL
+                // Construct the server message based on the response type
                 const serverMessage = {
                     type: 'server',
-                    content: (
-                        <div>
-                            {content}
-                            {downloadNeeded && (
-                                <button
-                                    className="download-button"
-                                    onClick={() => downloadCSV(currentFullData)}
-                                    aria-label="Download full data as CSV"
-                                >
-                                    Download Full Data
-                                </button>
-                            )}
-                        </div>
-                    ),
-                    sql: responseData.sql,
+                    content: content,
+                    fullData: currentFullData, // Store full data for download if needed
                     loading: false // Indicates that loading is complete
                 };
 
@@ -136,18 +157,44 @@ function Chatbot() {
     useEffect(() => {
         const initialMessage = {
             type: 'server',
-            content: (
-                <div>
-                    <h4>Welcome to SCS DW Chatbot! I'm here to assist you with your queries.</h4>
-                    <h4>I have below capabilities</h4> 
-                    <p>1. Want to get SCS DW data? Just ask !! </p>
-                    <p>2. Want to get SQL? Type /generateSql followed by your query</p>
-                </div>
-            ),
+            content: `
+# Welcome to SCS DW Chatbot!
+
+I'm here to assist you with your queries. I have the following capabilities:
+
+1. **Get SCS DW Data**: Just ask!
+2. **Generate SQL Queries**: Type \`/generateSql\` followed by your query.
+`,
             loading: false // No loading indicator for static message
         };
         setMessages([initialMessage]);
     }, []); // Empty dependency array ensures this runs once on mount
+
+    // Custom renderer for code blocks with syntax highlighting
+    const renderers = {
+        code({ node, inline, className, children, ...props }) {
+            const match = /language-(\w+)/.exec(className || '');
+            return !inline && match ? (
+                <SyntaxHighlighter
+                    style={darcula}
+                    language={match[1]}
+                    PreTag="div"
+                    {...props}
+                >
+                    {String(children).replace(/\n$/, '')}
+                </SyntaxHighlighter>
+            ) : (
+                <code className={className} {...props}>
+                    {children}
+                </code>
+            );
+        }
+    };
+
+    // Function to handle download link clicks
+    const handleDownloadClick = (data) => {
+        downloadCSV(data);
+    };
 
     return (
         <div className="chat-container">
@@ -156,25 +203,37 @@ function Chatbot() {
                     <li key={index} className={msg.type === 'user' ? 'user-message' : 'server-message'}>
                         {msg.type !== 'user' ? (
                             <div className="server-info">
-                                <img src={serverIcon} alt="Assistant" className="message-icon left" />
+                                <img src={serverIcon} alt="Assistant" className="message-icon" />
                                 {msg.loading ? (
-                                    <div className="spinner"></div> // Show spinner when loading
+                                    <div className="spinner"></div> /* Show spinner when loading */
                                 ) : (
-                                    <span>
-                                        {msg.content}
-                                        {msg.sql && (
-                                            <details className="details-summary">
-                                                <summary>Query Details</summary>
-                                                <pre>{msg.sql}</pre> {/* Display SQL query */}
-                                            </details>
+                                    <span className="message-content">
+                                        <ReactMarkdown
+                                            remarkPlugins={[remarkGfm]}
+                                            rehypePlugins={[rehypeSanitize]}
+                                            components={renderers}
+                                        >
+                                            {msg.content}
+                                        </ReactMarkdown>
+                                        {/* Show Download button if fullData is present and exceeds 20 entries */}
+                                        {msg.fullData && msg.fullData.length > 20 && (
+                                            <button
+                                                className="download-button"
+                                                onClick={() => handleDownloadClick(msg.fullData)}
+                                                aria-label="Download full data as CSV"
+                                            >
+                                                Download Full Data
+                                            </button>
                                         )}
                                     </span>
                                 )}
                             </div>
                         ) : (
-                            <span>{msg.content}</span> // User message content
+                            <span className="message-content">
+                                {msg.content}
+                            </span> /* User message content */
                         )}
-                        {msg.type === 'user' && <img src={userIcon} alt="User" className="message-icon right" />}
+                        {msg.type === 'user' && <img src={userIcon} alt="User" className="message-icon" />}
                     </li>
                 ))}
             </ul>
