@@ -251,11 +251,14 @@ ${msg.sql}
                                 )}
                             </div>
                         ) : (
-                            <span className="message-content">
-                                {msg.content}
-                            </span> /* User message content */
+                            <>
+                                {/* For user messages, message-content comes first, followed by the icon */}
+                                <span className="message-content">
+                                    {msg.content}
+                                </span> {/* User message content */}
+                                <img src={userIcon} alt="User" className="message-icon" />
+                            </>
                         )}
-                        {msg.type === 'user' && <img src={userIcon} alt="User" className="message-icon" />}
                     </li>
                 ))}
             </ul>

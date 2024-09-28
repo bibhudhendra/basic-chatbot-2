@@ -12,11 +12,14 @@
     --input-background: #ffffff; /* Input Background */
     --button-background: #3498db; /* Blue Buttons */
     --button-hover-background: #2980b9; /* Darker Blue on Hover */
-    --download-button-background: #3498db; /* Green Download Button */
-    --download-button-hover: #27ae60; /* Darker Green on Hover */
+    --download-button-background: #3498db; /* Blue Download Button */
+    --download-button-hover: #2980b9; /* Darker Blue on Hover */
     --spinner-border: #3498db; /* Spinner Color */
     --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --font-size: 16px;
+    
+    /* New Variable for User Message Background Color */
+    --user-message-background: #e0f7ff; /* Light Blue (Change as Desired) */
 }
 
 /* 2. General Chat Container Styling */
@@ -58,7 +61,7 @@
 }
 
 .messages-list::-webkit-scrollbar-thumb:hover {
-    background-color: darken(var(--primary-color), 10%);
+    background-color: #2c7abf; /* Manually specified darker blue */
 }
 
 /* 4. Individual Message Styling */
@@ -103,7 +106,7 @@
 
 /* User Message Bubble */
 .user-message .message-content {
-    background-color: var(--message-background-user);
+    background-color: var(--user-message-background); /* Updated Background Color */
     color: var(--text-color);
 }
 
