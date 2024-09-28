@@ -22,21 +22,26 @@
     --user-message-background: #e0f7ff; /* Light Blue (Change as Desired) */
 }
 
-/* 2. General Chat Container Styling */
+/* 2. Parent Container Styling */
+.chatbot-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    background-color: var(--background-color);
+}
+
+/* 3. Chat Container Styling - 70% Width */
 .chat-container {
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Full viewport height */
-    max-width: 800px; /* Maximum width for better readability */
-    margin: 0 auto; /* Center horizontally */
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    width: 70%;
+    border-right: 1px solid var(--border-color); /* Separator between chat and static content */
+    box-sizing: border-box;
     background-color: var(--background-color);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    font-family: var(--font-family);
 }
 
-/* 3. Messages List Styling */
+/* 4. Messages List Styling */
 .messages-list {
     flex: 1;
     padding: 20px;
@@ -64,13 +69,13 @@
     background-color: #2c7abf; /* Manually specified darker blue */
 }
 
-/* 4. Individual Message Styling */
+/* 5. Individual Message Styling */
 .user-message,
 .server-message {
     display: flex;
     align-items: flex-end;
     margin-bottom: 15px;
-    max-width: 70%; /* Limit message width */
+    max-width: 100%; /* Adjust to fit within 70% */
 }
 
 /* User Message Alignment */
@@ -110,7 +115,7 @@
     color: var(--text-color);
 }
 
-/* 5. Message Icons Styling */
+/* 6. Message Icons Styling */
 .message-icon {
     width: 40px;
     height: 40px;
@@ -118,7 +123,7 @@
     object-fit: cover;
 }
 
-/* 6. Spinner Styling */
+/* 7. Spinner Styling */
 .spinner {
     border: 4px solid rgba(0, 0, 0, 0.1); /* Light part */
     border-top: 4px solid var(--spinner-border); /* Colored part */
@@ -134,7 +139,7 @@
     100% { transform: rotate(360deg); }
 }
 
-/* 7. Input Row and Elements */
+/* 8. Input Row and Elements */
 .input-row {
     display: flex;
     padding: 15px;
@@ -172,7 +177,7 @@
     background-color: var(--button-hover-background);
 }
 
-/* 8. Download Button Styling */
+/* 9. Download Button Styling */
 .download-button {
     margin-top: 10px;
     padding: 8px 16px;
@@ -189,7 +194,7 @@
     background-color: var(--download-button-hover);
 }
 
-/* 9. Details Summary Styling */
+/* 10. Details Summary Styling */
 .details-summary {
     margin-top: 10px;
 }
@@ -211,7 +216,7 @@
     font-size: 14px;
 }
 
-/* 10. Markdown Rendering Enhancements */
+/* 11. Markdown Rendering Enhancements */
 
 /* Headers */
 .message-content h1,
@@ -329,17 +334,63 @@
     background-color: #f1f1f1;
 }
 
-/* 11. Responsive Design */
-@media (max-width: 600px) {
-    .chat-container {
-        max-width: 100%;
-        height: 100vh;
-        border: none;
-        border-radius: 0;
-        box-shadow: none;
+/* 12. Static Content Styling - 30% Width */
+.static-content {
+    width: 30%;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    background-color: #ffffff; /* White background for static content */
+}
+
+/* Static Content Headings */
+.static-content h2,
+.static-content h3 {
+    color: var(--primary-color);
+}
+
+/* Static Content Paragraphs */
+.static-content p {
+    color: var(--secondary-text-color);
+    margin-bottom: 10px;
+}
+
+/* Static Content Lists */
+.static-content ul,
+.static-content ol {
+    margin-left: 20px;
+    color: var(--secondary-text-color);
+}
+
+/* Static Content Links */
+.static-content a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.static-content a:hover {
+    text-decoration: underline;
+}
+
+/* 13. Responsive Design */
+@media (max-width: 900px) {
+    .chatbot-wrapper {
+        flex-direction: column;
     }
 
-    .messages-list {
+    .chat-container,
+    .static-content {
+        width: 100%;
+        border-right: none; /* Remove right border when stacked vertically */
+    }
+
+    .static-content {
+        border-top: 1px solid var(--border-color); /* Add top border for separation */
+    }
+}
+
+@media (max-width: 600px) {
+    .chat-container {
         padding: 10px;
     }
 
@@ -360,5 +411,9 @@
 
     .message-input {
         font-size: 14px;
+    }
+
+    .static-content {
+        padding: 10px;
     }
 }

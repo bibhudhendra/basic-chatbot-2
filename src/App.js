@@ -13,15 +13,6 @@ function App() {
     };
     return (
         <div className="App">
-            <header className="App-header">
-                <div className="App-logo-title">
-                    <h1>Analytics Buddy</h1>
-                    <img src={logo} alt="Analytics Buddy Logo" />
-                </div>
-                <button onClick={handleContactClick} className="contact-button">
-                    Contact to SCS Team
-                </button>
-            </header>
             <Chatbot />
         </div>
     );

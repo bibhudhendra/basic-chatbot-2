@@ -204,79 +204,103 @@ I'm here to assist you with your queries. I have the following capabilities:
     };
 
     return (
-        <div className="chat-container">
-            <ul className="messages-list">
-                {messages.map((msg, index) => (
-                    <li key={index} className={msg.type === 'user' ? 'user-message' : 'server-message'}>
-                        {msg.type !== 'user' ? (
-                            <div className="server-info">
-                                <img src={serverIcon} alt="Assistant" className="message-icon" />
-                                {msg.loading ? (
-                                    <div className="spinner"></div> /* Show spinner when loading */
-                                ) : (
-                                    <span className="message-content">
-                                        <ReactMarkdown
-                                            remarkPlugins={[remarkGfm]}
-                                            rehypePlugins={[rehypeSanitize]}
-                                            components={renderers}
-                                        >
-                                            {msg.content}
-                                        </ReactMarkdown>
-                                        {/* Show Download button if fullData is present and exceeds 20 entries */}
-                                        {msg.fullData && msg.fullData.length > 20 && (
-                                            <button
-                                                className="download-button"
-                                                onClick={() => handleDownloadClick(msg.fullData)}
-                                                aria-label="Download full data as CSV"
+        <div className="chatbot-wrapper">
+            {/* Chat Container - 70% Width */}
+            <div className="chat-container">
+                <ul className="messages-list">
+                    {messages.map((msg, index) => (
+                        <li key={index} className={msg.type === 'user' ? 'user-message' : 'server-message'}>
+                            {msg.type !== 'user' ? (
+                                <div className="server-info">
+                                    <img src={serverIcon} alt="Assistant" className="message-icon" />
+                                    {msg.loading ? (
+                                        <div className="spinner"></div> /* Show spinner when loading */
+                                    ) : (
+                                        <span className="message-content">
+                                            <ReactMarkdown
+                                                remarkPlugins={[remarkGfm]}
+                                                rehypePlugins={[rehypeSanitize]}
+                                                components={renderers}
                                             >
-                                                Download Full Data
-                                            </button>
-                                        )}
-                                        {/* Show Query Details if SQL is present */}
-                                        {msg.sql && (
-                                            <details className="details-summary">
-                                                <summary>Query Details</summary>
-                                                <ReactMarkdown
-                                                    remarkPlugins={[remarkGfm]}
-                                                    rehypePlugins={[rehypeSanitize]}
-                                                    components={renderers}
+                                                {msg.content}
+                                            </ReactMarkdown>
+                                            {/* Show Download button if fullData is present and exceeds 20 entries */}
+                                            {msg.fullData && msg.fullData.length > 20 && (
+                                                <button
+                                                    className="download-button"
+                                                    onClick={() => handleDownloadClick(msg.fullData)}
+                                                    aria-label="Download full data as CSV"
                                                 >
-                                                    {` \`\`\`sql
+                                                    Download Full Data
+                                                </button>
+                                            )}
+                                            {/* Show Query Details if SQL is present */}
+                                            {msg.sql && (
+                                                <details className="details-summary">
+                                                    <summary>Query Details</summary>
+                                                    <ReactMarkdown
+                                                        remarkPlugins={[remarkGfm]}
+                                                        rehypePlugins={[rehypeSanitize]}
+                                                        components={renderers}
+                                                    >
+                                                        {` \`\`\`sql
 ${msg.sql}
 \`\`\` `}
-                                                </ReactMarkdown>
-                                            </details>
-                                        )}
-                                    </span>
-                                )}
-                            </div>
-                        ) : (
-                            <>
-                                {/* For user messages, message-content comes first, followed by the icon */}
-                                <span className="message-content">
-                                    {msg.content}
-                                </span> {/* User message content */}
-                                <img src={userIcon} alt="User" className="message-icon" />
-                            </>
-                        )}
-                    </li>
-                ))}
-            </ul>
-            <div className="input-row">
-                <input
-                    type="text"
-                    className="message-input"
-                    value={message}
-                    onChange={e => setMessage(e.target.value)}
-                    onKeyDown={e => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            sendMessage();
-                        }
-                    }}
-                    placeholder="Type your message..."
-                />
-                <button className="send-button" onClick={sendMessage}>Send</button>
+                                                    </ReactMarkdown>
+                                                </details>
+                                            )}
+                                        </span>
+                                    )}
+                                </div>
+                            ) : (
+                                <>
+                                    {/* For user messages, message-content comes first, followed by the icon */}
+                                    <span className="message-content">
+                                        {msg.content}
+                                    </span> {/* User message content */}
+                                    <img src={userIcon} alt="User" className="message-icon" />
+                                </>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+                <div className="input-row">
+                    <input
+                        type="text"
+                        className="message-input"
+                        value={message}
+                        onChange={e => setMessage(e.target.value)}
+                        onKeyDown={e => {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                sendMessage();
+                            }
+                        }}
+                        placeholder="Type your message..."
+                    />
+                    <button className="send-button" onClick={sendMessage}>Send</button>
+                </div>
+            </div>
+
+            {/* Static Content - 30% Width */}
+            <div className="static-content">
+                {/* Replace the content below with your desired static HTML */}
+                <h2>About This Chatbot</h2>
+                <p>
+                    The SCS DW Chatbot is designed to assist you in retrieving data and generating SQL queries seamlessly.
+                    Whether you're looking to analyze payment terms or need help crafting complex queries, our chatbot is here to help.
+                </p>
+                <h3>Features:</h3>
+                <ul>
+                    <li>Real-time data retrieval</li>
+                    <li>Automated SQL query generation</li>
+                    <li>User-friendly interface</li>
+                    <li>Download data as CSV</li>
+                </ul>
+                <h3>Contact Us:</h3>
+                <p>
+                    If you encounter any issues or have suggestions, feel free to reach out to our support team at <a href="mailto:support@scsdw.com">support@scsdw.com</a>.
+                </p>
             </div>
         </div>
     );
