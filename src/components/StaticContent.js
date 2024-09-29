@@ -11,9 +11,9 @@ function StaticContent() {
             <h3>Capabilities:</h3>
             <h4>SCS DW </h4>
             <ul>
-                <li>Real-time data retrieval from SCS DW (scsdatalake redshift cluster)</li>
+                <li>Want to get just SQL or table informations on SCS DW, just ask</li>
+                <li>Real-time data retrieval from SCS DW (scsdatalake redshift cluster). Type <b>/data</b> followed by query</li>
                 <li>Download data as CSV/Excel</li>
-                <li>Want to get just SQL for DW query? Type <b>/dw-sql</b> followed by query</li>
             </ul>
             <h4>SCS RDS</h4>
             <ul>
