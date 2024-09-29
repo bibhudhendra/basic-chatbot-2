@@ -6,7 +6,7 @@
     --background-color: #f9f9f9; /* Light Gray */
     --message-background-user: #dcf8c6; /* Light Green for User Messages */
     --message-background-server: #ffffff; /* White for Server Messages */
-    --text-color: #333333; /* Dark Gray */
+    --text-color: #000000; /* Dark Gray */
     --secondary-text-color: #555555; /* Medium Gray */
     --border-color: #dddddd; /* Light Border */
     --input-background: #ffffff; /* Input Background */
