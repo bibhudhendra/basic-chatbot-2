@@ -7,7 +7,7 @@
     --message-background-user: #dcf8c6; /* Light Green for User Messages */
     --message-background-server: #ffffff; /* White for Server Messages */
     --text-color: #000000; /* Dark Gray */
-    --secondary-text-color: #555555; /* Medium Gray */
+    --secondary-text-color: #0b0b0b; /* Medium Gray */
     --border-color: #dddddd; /* Light Border */
     --input-background: #ffffff; /* Input Background */
     --button-background: #3498db; /* Blue Buttons */
@@ -206,8 +206,8 @@
 }
 
 .details-summary pre {
-    background-color: #f0f0f0;
-    color: #333333;
+    background-color: #100f0f;
+    color: #090808;
     padding: 10px;
     border-radius: 4px;
     overflow-x: auto;
@@ -262,7 +262,7 @@
 
 /* Inline Code */
 .message-content code {
-    background-color: #f5f5f5;
+    background-color: #f1f2eb;
     padding: 2px 4px;
     border-radius: 4px;
     font-family: monospace;
@@ -270,8 +270,8 @@
 
 /* Preformatted Text */
 .message-content pre {
-    background-color: #272822;
-    color: #f8f8f2;
+    background-color: #f1f2eb;
+    color: #111110;
     padding: 10px;
     border-radius: 4px;
     overflow-x: auto;
