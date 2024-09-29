@@ -19,6 +19,7 @@ function StaticContent() {
             <ul>
                 <li>Type <b>/rds</b>, chatbot will know query is related to RDS</li>
                 <li>It can give all RDS table related informations and SQL </li>
+                <li>It has context of mostly common used tables</li>
             </ul>
             <h3>Upcoming Features</h3>
             <ul>
