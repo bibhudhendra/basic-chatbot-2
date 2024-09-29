@@ -2,24 +2,55 @@
 
 /* 1. CSS Variables for Consistent Theming */
 :root {
+    /* Primary Colors */
     --primary-color: #3498db; /* Blue */
+    --primary-color-hover: #2980b9; /* Darker Blue */
+    --secondary-color: #dcf8c6; /* Light Green */
+    --accent-color: #e0f7ff; /* Light Blue for User Messages */
+
+    /* Background Colors */
     --background-color: #f9f9f9; /* Light Gray */
-    --message-background-user: #dcf8c6; /* Light Green for User Messages */
-    --message-background-server: #ffffff; /* White for Server Messages */
-    --text-color: #000000; /* Dark Gray */
-    --secondary-text-color: #0b0b0b; /* Medium Gray */
-    --border-color: #dddddd; /* Light Border */
-    --input-background: #ffffff; /* Input Background */
-    --button-background: #3498db; /* Blue Buttons */
-    --button-hover-background: #2980b9; /* Darker Blue on Hover */
-    --download-button-background: #3498db; /* Blue Download Button */
-    --download-button-hover: #2980b9; /* Darker Blue on Hover */
-    --spinner-border: #3498db; /* Spinner Color */
+    --message-background-user: var(--accent-color);
+    --message-background-server: #ffffff; /* White */
+    --input-background: #ffffff; /* White */
+    --static-content-background: #efefea; /* White */
+
+    /* Text Colors */
+    --text-color: #000000; /* Black */
+    --secondary-text-color: #0b0b0b; /* Dark Gray */
+
+    /* Border Colors */
+    --border-color: #dddddd; /* Light Gray */
+
+    /* Button Colors */
+    --button-background: var(--primary-color);
+    --button-hover-background: var(--primary-color-hover);
+    --download-button-background: var(--primary-color);
+    --download-button-hover: var(--primary-color-hover);
+
+    /* Spinner Colors */
+    --spinner-border: var(--primary-color);
+    --spinner-light-border: rgba(0, 0, 0, 0.1);
+
+    /* Scrollbar Colors */
+    --scrollbar-thumb-color: var(--primary-color);
+    --scrollbar-thumb-hover-color: #2c7abf; /* Darker Blue */
+
+    /* Code Block Colors */
+    --code-background: #f1f2eb; /* Light Gray */
+    --code-text-color: #111110; /* Almost Black */
+
+    /* Blockquote Colors */
+    --blockquote-background: #f9f9f9; /* Light Gray */
+
+    /* Table Colors */
+    --table-header-background: #f4f4f4; /* Light Gray */
+    --table-row-even-background: #f9f9f9; /* Light Gray */
+    --table-row-hover-background: #f1f1f1; /* Slightly Darker Gray */
+
+    /* Font Settings */
     --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --font-size: 16px;
-    
-    /* New Variable for User Message Background Color */
-    --user-message-background: #e0f7ff; /* Light Blue (Change as Desired) */
 }
 
 /* 2. Parent Container Styling */
@@ -27,7 +58,7 @@
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 100vh; /* Full viewport height */
+    height: 100vh;
     background-color: var(--background-color);
 }
 
@@ -36,7 +67,7 @@
     display: flex;
     flex-direction: column;
     width: 70%;
-    border-right: 1px solid var(--border-color); /* Separator between chat and static content */
+    border-right: 1px solid var(--border-color);
     box-sizing: border-box;
     background-color: var(--background-color);
 }
@@ -45,7 +76,7 @@
 .messages-list {
     flex: 1;
     padding: 20px;
-    list-style: none; /* Remove default list styles */
+    list-style: none;
     overflow-y: auto;
     background-color: var(--message-background-server);
 }
@@ -61,12 +92,12 @@
 }
 
 .messages-list::-webkit-scrollbar-thumb {
-    background-color: var(--primary-color);
+    background-color: var(--scrollbar-thumb-color);
     border-radius: 4px;
 }
 
 .messages-list::-webkit-scrollbar-thumb:hover {
-    background-color: #2c7abf; /* Manually specified darker blue */
+    background-color: var(--scrollbar-thumb-hover-color);
 }
 
 /* 5. Individual Message Styling */
@@ -75,19 +106,19 @@
     display: flex;
     align-items: flex-end;
     margin-bottom: 15px;
-    max-width: 100%; /* Adjust to fit within 70% */
+    max-width: 100%;
 }
 
 /* User Message Alignment */
 .user-message {
     align-self: flex-end;
-    flex-direction: row-reverse; /* Place icon on the right */
+    flex-direction: row-reverse;
 }
 
 /* Server Message Alignment */
 .server-message {
     align-self: flex-start;
-    flex-direction: row; /* Place icon on the left */
+    flex-direction: row;
 }
 
 /* Message Bubble Styling */
@@ -111,7 +142,7 @@
 
 /* User Message Bubble */
 .user-message .message-content {
-    background-color: var(--user-message-background); /* Updated Background Color */
+    background-color: var(--message-background-user);
     color: var(--text-color);
 }
 
@@ -125,8 +156,8 @@
 
 /* 7. Spinner Styling */
 .spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1); /* Light part */
-    border-top: 4px solid var(--spinner-border); /* Colored part */
+    border: 4px solid var(--spinner-light-border);
+    border-top: 4px solid var(--spinner-border);
     border-radius: 50%;
     width: 24px;
     height: 24px;
@@ -206,8 +237,8 @@
 }
 
 .details-summary pre {
-    background-color: #100f0f;
-    color: #090808;
+    background-color: var(--code-background);
+    color: var(--code-text-color);
     padding: 10px;
     border-radius: 4px;
     overflow-x: auto;
@@ -230,29 +261,12 @@
     margin-bottom: 10px;
 }
 
-.message-content h1 {
-    font-size: 24px;
-}
-
-.message-content h2 {
-    font-size: 22px;
-}
-
-.message-content h3 {
-    font-size: 20px;
-}
-
-.message-content h4 {
-    font-size: 18px;
-}
-
-.message-content h5 {
-    font-size: 16px;
-}
-
-.message-content h6 {
-    font-size: 14px;
-}
+.message-content h1 { font-size: 24px; }
+.message-content h2 { font-size: 22px; }
+.message-content h3 { font-size: 20px; }
+.message-content h4 { font-size: 18px; }
+.message-content h5 { font-size: 16px; }
+.message-content h6 { font-size: 14px; }
 
 /* Paragraphs */
 .message-content p {
@@ -262,7 +276,8 @@
 
 /* Inline Code */
 .message-content code {
-    background-color: #f1f2eb;
+    background-color: var(--code-background);
+    color: var(--code-text-color);
     padding: 2px 4px;
     border-radius: 4px;
     font-family: monospace;
@@ -270,8 +285,8 @@
 
 /* Preformatted Text */
 .message-content pre {
-    background-color: #f1f2eb;
-    color: #111110;
+    background-color: var(--code-background);
+    color: var(--code-text-color);
     padding: 10px;
     border-radius: 4px;
     overflow-x: auto;
@@ -302,7 +317,7 @@
     padding-left: 10px;
     color: var(--secondary-text-color);
     margin: 10px 0;
-    background-color: #f9f9f9;
+    background-color: var(--blockquote-background);
     border-radius: 4px;
 }
 
@@ -322,16 +337,16 @@
 }
 
 .message-content th {
-    background-color: #f4f4f4;
+    background-color: var(--table-header-background);
     font-weight: bold;
 }
 
 .message-content tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: var(--table-row-even-background);
 }
 
 .message-content tr:hover {
-    background-color: #f1f1f1;
+    background-color: var(--table-row-hover-background);
 }
 
 /* 12. Static Content Styling - 30% Width */
@@ -340,7 +355,7 @@
     padding: 20px;
     box-sizing: border-box;
     overflow-y: auto;
-    background-color: #ffffff; /* White background for static content */
+    background-color: var(--static-content-background);
 }
 
 /* Static Content Headings */
@@ -381,11 +396,11 @@
     .chat-container,
     .static-content {
         width: 100%;
-        border-right: none; /* Remove right border when stacked vertically */
+        border-right: none;
     }
 
     .static-content {
-        border-top: 1px solid var(--border-color); /* Add top border for separation */
+        border-top: 1px solid var(--border-color);
     }
 }
 
