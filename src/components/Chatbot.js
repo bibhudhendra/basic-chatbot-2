@@ -76,6 +76,9 @@ function Chatbot() {
             }
   
             content = aiResponse;
+          } else if (responseData.sql && responseData.message) {
+            content = responseData.message;
+            sqlQuery = responseData.sql;
           } else {
             content = 'No valid data received from server.';
           }
